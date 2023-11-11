@@ -27,7 +27,8 @@ public class Deck {
     public void shuffle() {
         // shuffle the deck here
         for (int index = 0; index < cards.length; ++ index) {
-            int newIndex = randomGeneraor.nextInt(cards.length - index) + index ;
+            int newIndex = randomGeneraor.nextInt(cards.length - index)
+                    + index ;
 
             Card intermadiar = cards[index] ;
             cards[index] = cards[newIndex] ;

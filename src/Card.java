@@ -4,13 +4,15 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Card implements Comparable<Card> {
 
     private final int suit; // use integers 1-4 to encode the suit
     private final int rank; // use integers 1-13 to encode the rank
     private final ArrayList<String> Suits =
-            new ArrayList<>(Arrays.asList("", "diamonds", "spades", "hearts", "clubs"));
+            new ArrayList<>(Arrays.asList("", "diamonds",
+                    "spades", "hearts", "clubs"));
     private final ArrayList<String> Ranks =
             new ArrayList<>(Arrays.asList("Jack", "Queen", "King")) ;
 
@@ -21,7 +23,7 @@ public class Card implements Comparable<Card> {
         put('d', 1);
     }} ;
 
-    private final String name ;
+    private String name ;
 
     /*
     suit 4 = clubs
@@ -54,11 +56,26 @@ public class Card implements Comparable<Card> {
 
     public Card(String s) {
         if (s.length() == 2){
+            if (!('a' <= s.charAt(0) && s.charAt(0) <= 'z') ||
+                    !('0' <= s.charAt(1) && s.charAt(1) <= '9')) {
+                suit = rank = -1 ;
+                return;
+            }
             suit = suits.get(s.charAt(0)) ;
             rank = s.charAt(1) - '0';
         } else if (s.length() == 3) {
+            if (!('a' <= s.charAt(0) && s.charAt(0) <= 'z')
+                    || !('0' <= s.charAt(1) && s.charAt(1) <= '9') ||
+                    !('0' <= s.charAt(2) && s.charAt(2) <= '9')) {
+                suit = rank = -1 ;
+                return;
+            }
             suit = suits.get(s.charAt(0)) ;
-            rank = (s.charAt(1) - '0') * 10 + (s.charAt(2) - '0');
+            int rank = (s.charAt(1) - '0') * 10 + (s.charAt(2) - '0');
+            if (rank > 13) {
+                rank = -1 ;
+            }
+            this.rank = rank ;
         } else {
             suit = -1 ;
             rank = -1 ;
@@ -104,6 +121,25 @@ public class Card implements Comparable<Card> {
 
     public boolean oneLess(Card card) {
         return this.rank == card.rank - 1 ;
+    }
+
+    public String getName() {
+        String ret = "" ;
+        if (rank <= 10) {
+            ret += String.valueOf(rank);
+        } else {
+            ret += Ranks.get(rank - 11) ;
+        }
+        if (suit == 1) {
+            ret += " ◆ diamonds" ;
+        } else if (suit == 2) {
+            ret += " ♠ spades" ;
+        } else if (suit == 3) {
+            ret += " ♥ hearts" ;
+        } else {
+            ret += " ♣ clubs" ;
+        }
+        return ret ;
     }
 
 }
