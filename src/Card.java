@@ -13,21 +13,15 @@ public class Card implements Comparable<Card> {
             new ArrayList<>(Arrays.asList("", "diamonds", "spades", "hearts", "clubs"));
     private final ArrayList<String> Ranks =
             new ArrayList<>(Arrays.asList("Jack", "Queen", "King")) ;
-    private final HashMap<Integer, Character> Symbols = new HashMap<>() {{
-        put(1, (char) 4) ;
-        put(2, (char) 6) ;
-        put(3, (char) 3) ;
-        put(4, (char) 5) ;
-    }};
 
-    private HashMap<Character, Integer> suits = new HashMap<>() {{
+    private final HashMap<Character, Integer> suits = new HashMap<>() {{
         put('c', 4);
         put('h', 3);
         put('s', 2);
         put('d', 1);
     }} ;
 
-    private String name ;
+    private final String name ;
 
     /*
     suit 4 = clubs
@@ -41,6 +35,11 @@ public class Card implements Comparable<Card> {
         suit = s ;
         rank = r ;
 
+        name = createName();
+    }
+
+    private String createName() {
+        final String name;
         if (rank > 10) {
             name = Ranks.get(rank - 11) + "(" + rank + ")" + " of "
                     + Suits.get(suit) + "(" + suit + ")";
@@ -50,6 +49,7 @@ public class Card implements Comparable<Card> {
         } else {
             name = rank + " of " + Suits.get(suit) + "(" + suit + ")" ;
         }
+        return name;
     }
 
     public Card(String s) {
@@ -64,15 +64,7 @@ public class Card implements Comparable<Card> {
             rank = -1 ;
         }
 
-        if (rank > 10) {
-            name = Ranks.get(rank - 11) + "(" + rank + ")" + " of "
-                    + Suits.get(suit) + "(" + suit + ")";
-        } else if (rank == 1) {
-            name = "Ace" + "(" + rank + ")" + " of " +
-                    Suits.get(suit) + "(" + suit + ")" ;
-        } else {
-            name = rank + " of " + Suits.get(suit) + "(" + suit + ")" ;
-        }
+        name = createName();
     }
 
     @Override  public int compareTo(Card c) {

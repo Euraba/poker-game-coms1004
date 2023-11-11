@@ -76,6 +76,7 @@ public class Player {
     }
 
     public String checkHand() {
+        arrangeCards();
         boolean isRoyalFlush = royalFlush() ;
         if (isRoyalFlush) {
             return "Royal Flush" ;
@@ -121,7 +122,7 @@ public class Player {
             return "Pair" ;
         }
 
-        return "No pair" ;
+        return "Nothing" ;
     }
 
     private boolean pair() {
@@ -162,8 +163,8 @@ public class Player {
     }
     private boolean straight() {
         if (hand.get(0).isRank(1) && hand.get(1).isRank(10) &&
-                hand.get(0).isRank(11) && hand.get(0).isRank(12) &&
-                hand.get(0).isRank(13)) {
+                hand.get(2).isRank(11) && hand.get(3).isRank(12) &&
+                hand.get(4).isRank(13)) {
             return true ;
         }
         for (int i = 0 ; i < hand.size() - 1 ; ++ i) {
@@ -215,8 +216,8 @@ public class Player {
 
     private boolean royalFlush() {
         if (hand.get(0).isRank(1) && hand.get(1).isRank(10) &&
-                hand.get(0).isRank(11) && hand.get(0).isRank(12) &&
-                hand.get(0).isRank(13)) {
+                hand.get(2).isRank(11) && hand.get(3).isRank(12) &&
+                hand.get(4).isRank(13)) {
             return sameSuit();
         }
         return false ;

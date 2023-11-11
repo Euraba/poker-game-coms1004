@@ -3,9 +3,9 @@
 import java.util.Random ;
 public class Deck {
 
-    private Card[] cards;
+    private final Card[] cards;
     private int top; // the index of the top of the deck
-    private Random randomGeneraor ;
+    private final Random randomGeneraor ;
 
     // add more instance variables if needed
 

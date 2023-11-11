@@ -6,11 +6,27 @@ import java.util.Scanner;
 
 public class Game {
 
-    private Player player;
+    private final Player player;
     private Deck deck;
-    private Scanner input ;
-    private final HashMap<Character, Integer> suit = new HashMap<>() ;
-    private final HashMap<String, Integer> multipliers = new HashMap<>() ;
+    private final Scanner input ;
+    private final HashMap<Character, Integer> suit = new HashMap<>() {{
+        put('c', 1) ;
+        put('h', 2) ;
+        put('s', 3) ;
+        put('d', 4) ;
+    }} ;
+    private final HashMap<String, Integer> multipliers = new HashMap<>() {{
+        put("No pair", 0) ;
+        put("Pair", 1) ;
+        put("Two pairs", 2) ;
+        put("Three of a kind", 3) ;
+        put("Straight", 4) ;
+        put("Flush", 5) ;
+        put("Full House", 6) ;
+        put("Four of a kind", 25) ;
+        put("Straight Flush", 50) ;
+        put("Royal Flush", 250) ;
+    }} ;
     String [] hand ;
     // you'll probably need some more here
 
@@ -32,22 +48,6 @@ public class Game {
         deck = new Deck() ;
         input = new Scanner(System.in) ;
 
-        suit.put('c', 1) ;
-        suit.put('h', 2) ;
-        suit.put('s', 3) ;
-        suit.put('d', 4) ;
-
-        multipliers.put("No pair", 0) ;
-        multipliers.put("Pair", 1) ;
-        multipliers.put("Two pairs", 2) ;
-        multipliers.put("Three of a kind", 3) ;
-        multipliers.put("Straight", 4) ;
-        multipliers.put("Flush", 5) ;
-        multipliers.put("Full House", 6) ;
-        multipliers.put("Four of a kind", 25) ;
-        multipliers.put("Straight Flush", 50) ;
-        multipliers.put("Royal Flush", 250) ;
-
         hand = testHand ;
     }
 
@@ -56,22 +56,6 @@ public class Game {
         player = new Player() ;
         deck = new Deck() ;
         input = new Scanner(System.in) ;
-
-        suit.put('c', 1) ;
-        suit.put('h', 2) ;
-        suit.put('s', 3) ;
-        suit.put('d', 4) ;
-
-        multipliers.put("No pair", 0) ;
-        multipliers.put("Pair", 1) ;
-        multipliers.put("Two pairs", 2) ;
-        multipliers.put("Three of a kind", 3) ;
-        multipliers.put("Straight", 4) ;
-        multipliers.put("Flush", 5) ;
-        multipliers.put("Full House", 6) ;
-        multipliers.put("Four of a kind", 25) ;
-        multipliers.put("Straight Flush", 50) ;
-        multipliers.put("Royal Flush", 250) ;
 
     }
 
@@ -93,6 +77,13 @@ public class Game {
         boolean wantsToPlay = true ;
 
         while (wantsToPlay && player.getBankroll() > 0) {
+
+            int howManyCardsLeft = deck.howManyCardLeft() ;
+            if (howManyCardsLeft < 5) {
+                System.out.println("Sorry, but the deck is empty.");
+                break;
+            }
+
             double bet = getBet();
 
             dealCards();
@@ -101,8 +92,11 @@ public class Game {
 
             computeHand(bet);
 
-            System.out.println("If you want to quit type -1, else type 1");
             System.out.println("You have " + player.getBankroll() + " tokens in your account");
+            if (player.getBankroll() == 0) {
+                break;
+            }
+            System.out.println("If you want to quit type -1, else type 1");
 
             int turn = input.nextInt() ;
             if (turn == -1) {
