@@ -1,5 +1,7 @@
-
-// add your own banner here
+/*
+ * EB3591 11/10
+ * Balasescu Eusebiu-Rares
+ */
 
 import java.util.ArrayList;
 import java.util.Collection;

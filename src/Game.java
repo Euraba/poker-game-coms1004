@@ -16,7 +16,7 @@ public class Game {
         put('d', 4) ;
     }} ;
     private final HashMap<String, Integer> multipliers = new HashMap<>() {{
-        put("No pair", 0) ;
+        put("Nothing", 0) ;
         put("Pair", 1) ;
         put("Two pairs", 2) ;
         put("Three of a kind", 3) ;
