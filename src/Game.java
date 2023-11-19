@@ -1,33 +1,12 @@
 
 // add your own banner here
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
-public class Game {
+public class Game implements ConstantVariables{
 
     private final Player player;
     private Deck deck;
     private final Scanner input ;
-    private final HashMap<Character, Integer> suit = new HashMap<>() {{
-        put('c', 1) ;
-        put('h', 2) ;
-        put('s', 3) ;
-        put('d', 4) ;
-    }} ;
-
-    private final HashMap<String, Integer> multipliers = new HashMap<>() {{
-        put("Nothing", 0) ;
-        put("Pair", 1) ;
-        put("Two pairs", 2) ;
-        put("Three of a kind", 3) ;
-        put("Straight", 4) ;
-        put("Flush", 5) ;
-        put("Full House", 6) ;
-        put("Four of a kind", 25) ;
-        put("Straight Flush", 50) ;
-        put("Royal Flush", 250) ;
-    }} ;
     private String [] hand ;
     // you'll probably need some more here
 
@@ -62,13 +41,14 @@ public class Game {
 
     public void play() {
 
+        deck = new Deck() ;
+        deck.shuffle();
+
         if (hand != null) {
             playTest() ;
         }
 
         // this method should play the game
-        deck = new Deck() ;
-        deck.shuffle();
 
         System.out.println("Hello! You just started a game of poker!");
         System.out.println("You have " + player.getBankroll() +
@@ -118,8 +98,8 @@ public class Game {
         System.out.println("How much do you want to bet?");
         double bet = input.nextDouble() ;
 
-        while (bet > player.getBankroll()) {
-            System.out.println("You don't have that much money!");
+        while (bet > player.getBankroll() || bet > 5) {
+            System.out.println("You don't have that much money or you chose to bet more than 5!");
             System.out.println("Choose another amount");
             bet = input.nextDouble() ;
         }
@@ -144,54 +124,66 @@ public class Game {
     }
 
     private void changeUnwantedCards() {
-        System.out.println("How many cards do you want to change? ");
-        ArrayList<Card> cardsToBeRemoved = new ArrayList<Card>() ;
+        System.out.println("How many cards do you want to change?");
+        int howManyToChange = input.nextInt() ;
+        ArrayList<Card> cardsToBeRemoved = new ArrayList<>() ;
 
-        for (int howManyToChange = input.nextInt() ; howManyToChange > 0 ;
-             -- howManyToChange) {
-            System.out.println("What card do you wish to change? ") ;
-            System.out.println("Input your answer as either the index of "
-                    + " the card or the first letter of the symbol followed "
-                    + "by the rank") ;
-            System.out.println("If you wish to stop changing cards type -1");
-            String change = input.next() ;
-            int index = -1 ;
-
-            do {
-                if (change == "-1") {
-                    break;
-                }
-                if (change.length() == 1) {
-                    index = change.charAt(0) - 1 - '0';
-                    if (index != -1 && index != -2) {
-                        cardsToBeRemoved.add(player.cardAtIndex(index));
-                        break;
-                    }
-                } else if (change.length() <= 3){
-                    index = player.getIndexOfCard(new Card(change));
-                    if (index != -1 && index != -2) {
-                        cardsToBeRemoved.add(player.cardAtIndex(index));
-                        break;
-                    }
-                }
-                if (index == -1) {
-                    System.out.print("Enter a valid card!");
-                } else {
-                    System.out.println("You do not have that card!" +
-                            " Enter a valid card!");
-                }
-                change = input.next() ;
-            } while (index == -1 || index == -2) ;
+        for (int i = 1 ; i <= howManyToChange ; ++ i) {
+            changeCard(cardsToBeRemoved) ;
         }
 
         for (var card : cardsToBeRemoved) {
             player.removeCard(card);
-        }
-
-        for (int i = 0 ; i < cardsToBeRemoved.size() ; ++ i) {
             player.addCard(deck.deal());
         }
+
         player.showCards();
+    }
+
+    private void changeCard(ArrayList<Card> cardsToBeRemoved) {
+        Card chosenCard = null;
+        boolean chose = false ;
+        System.out.println("Enter either the index of the card you " +
+                "want to change or the first leter of the suit followed by" +
+                " the rank.");
+        while (!chose) {
+            String card = input.next() ;
+
+            int rank, suit ;
+
+            if (Character.isDigit(card.charAt(0))) {
+                rank = Integer.parseInt(card) ;
+                rank -- ; // card for player starts at 0
+                if (0 <= rank && rank <= 4 && !cardsToBeRemoved.contains(player.cardAtIndex(rank))) {
+                    chose = true ;
+                    chosenCard = player.cardAtIndex(rank) ;
+                    break;
+                } else {
+                    System.out.println("You either already chose this card or chose an invalid index. Please try again.");
+                }
+                continue;
+            }
+
+            suit = suits.get(card.charAt(0)) ;
+            rank = Integer.parseInt(card.substring(1)) ;
+
+            if (!(1 <= rank && rank <= 13)) {
+                System.out.println("That is not a valid rank. Please try again.");
+                continue;
+            }
+
+            Card possibleCard = new Card(suit, rank) ;
+
+            if (!cardsToBeRemoved.contains(possibleCard)) {
+                chose = true ;
+                int index = player.getIndexOfCard(possibleCard) ;
+                chosenCard = player.cardAtIndex(index);
+            } else {
+                System.out.println("You already chosed this card. Please try again");
+                continue;
+            }
+        }
+        cardsToBeRemoved.add(chosenCard);
     }
 
     private void dealCards() {
@@ -205,13 +197,10 @@ public class Game {
 
     private void playTest() {
         for (int i = 0 ; i < hand.length ; ++ i) {
-            player.addCard(new Card(hand[i]));
+            Card aux = new Card(hand[i]) ;
+            player.addCard(aux);
+            deck.removeCard(aux) ;
         }
-        player.showCards();
-        String result = checkHand(player.getHand()) ;
-
-        System.out.println(result);
-        System.exit(0);
     }
 
     public String checkHand(ArrayList<Card> hand) {

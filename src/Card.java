@@ -1,29 +1,11 @@
 
 // add your own banner here
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Random;
-
-public class Card implements Comparable<Card> {
+public class Card implements Comparable<Card>, ConstantVariables {
 
     private final int suit; // use integers 1-4 to encode the suit
     private final int rank; // use integers 1-13 to encode the rank
-    private final ArrayList<String> Suits =
-            new ArrayList<>(Arrays.asList("", "diamonds",
-                    "spades", "hearts", "clubs"));
-    private final ArrayList<String> Ranks =
-            new ArrayList<>(Arrays.asList("Jack", "Queen", "King")) ;
-
-    private final HashMap<Character, Integer> suits = new HashMap<>() {{
-        put('c', 4);
-        put('h', 3);
-        put('s', 2);
-        put('d', 1);
-    }} ;
-
-    private String name ;
+    private final String name ;
 
     /*
     suit 4 = clubs
@@ -43,43 +25,21 @@ public class Card implements Comparable<Card> {
     private String createName() {
         final String name;
         if (rank > 10) {
-            name = Ranks.get(rank - 11) + "(" + rank + ")" + " of "
-                    + Suits.get(suit) + "(" + suit + ")";
+            name = ranks.get(rank - 11) + "(" + rank + ")" + " of "
+                    + suitsName.get(suit) + "(" + suit + ")";
         } else if (rank == 1) {
             name = "Ace" + "(" + rank + ")" + " of " +
-                    Suits.get(suit) + "(" + suit + ")" ;
+                    suitsName.get(suit) + "(" + suit + ")" ;
         } else {
-            name = rank + " of " + Suits.get(suit) + "(" + suit + ")" ;
+            name = rank + " of " + suitsName.get(suit) + "(" + suit + ")" ;
         }
         return name;
     }
 
     public Card(String s) {
-        if (s.length() == 2){
-            if (!('a' <= s.charAt(0) && s.charAt(0) <= 'z') ||
-                    !('0' <= s.charAt(1) && s.charAt(1) <= '9')) {
-                suit = rank = -1 ;
-                return;
-            }
-            suit = suits.get(s.charAt(0)) ;
-            rank = s.charAt(1) - '0';
-        } else if (s.length() == 3) {
-            if (!('a' <= s.charAt(0) && s.charAt(0) <= 'z')
-                    || !('0' <= s.charAt(1) && s.charAt(1) <= '9') ||
-                    !('0' <= s.charAt(2) && s.charAt(2) <= '9')) {
-                suit = rank = -1 ;
-                return;
-            }
-            suit = suits.get(s.charAt(0)) ;
-            int rank = (s.charAt(1) - '0') * 10 + (s.charAt(2) - '0');
-            if (rank > 13) {
-                rank = -1 ;
-            }
-            this.rank = rank ;
-        } else {
-            suit = -1 ;
-            rank = -1 ;
-        }
+
+        this.suit = suits.get(s.charAt(0)) ;
+        this.rank = Integer.parseInt(s.substring(1));
 
         name = createName();
     }
@@ -90,10 +50,14 @@ public class Card implements Comparable<Card> {
         if (rank == c.rank) {
             return Integer.compare(this.suit, c.suit);
         }
-        if (rank == 1) {
+        /*if (rank == 1) {
             return 1;
         }
-        return Integer.compare(this.rank, c.rank) ;
+        return Integer.compare(this.rank, c.rank) ;*/
+        if (rank < c.rank) {
+            return -1 ;
+        }
+        return 1 ;
 
     }
 
@@ -125,20 +89,16 @@ public class Card implements Comparable<Card> {
 
     public String getName() {
         String ret = "" ;
-        if (rank <= 10) {
+        if (rank == 1) {
+            ret += "Ace" ;
+        } else if (rank <= 10) {
             ret += String.valueOf(rank);
         } else {
-            ret += Ranks.get(rank - 11) ;
+            ret += ranks.get(rank - 11) ;
         }
-        if (suit == 1) {
-            ret += " ◆ diamonds" ;
-        } else if (suit == 2) {
-            ret += " ♠ spades" ;
-        } else if (suit == 3) {
-            ret += " ♥ hearts" ;
-        } else {
-            ret += " ♣ clubs" ;
-        }
+
+        ret += suitsChar.get(suit) ;
+
         return ret ;
     }
 

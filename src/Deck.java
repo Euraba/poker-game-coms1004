@@ -1,11 +1,13 @@
 
 // add your own banner here
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random ;
 public class Deck {
 
-    private final Card[] cards;
+    private Card[] cards;
     private int top; // the index of the top of the deck
-    private final Random randomGeneraor ;
+    private final Random randomGenerator;
 
     // add more instance variables if needed
 
@@ -13,7 +15,7 @@ public class Deck {
         // make a 52 card deck here
         cards = new Card[52] ;
         top = 0 ;
-        randomGeneraor = new Random() ;
+        randomGenerator = new Random() ;
 
         for (int suit = 1 ; suit <= 4 ; ++ suit) {
             for (int rank = 1 ; rank <= 13 ; ++ rank) {
@@ -27,7 +29,7 @@ public class Deck {
     public void shuffle() {
         // shuffle the deck here
         for (int index = 0; index < cards.length; ++ index) {
-            int newIndex = randomGeneraor.nextInt(cards.length - index)
+            int newIndex = randomGenerator.nextInt(cards.length - index)
                     + index ;
 
             Card intermadiar = cards[index] ;
@@ -42,6 +44,15 @@ public class Deck {
             return null ;
         }
         return cards[top --] ;
+    }
+
+    public void removeCard(Card card) {
+        ArrayList<Card> temp = new ArrayList<>(Arrays.asList(cards));
+        temp.remove(card) ;
+        cards = (Card[]) temp.toArray();
+        if (true) {
+            int x ;
+        }
     }
 
     // add more methods here if needed

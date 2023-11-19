@@ -13,7 +13,7 @@ class Main {
     public static void main(String args[]) {
 
         //Creating the Frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        /*frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
         frame.setPreferredSize(new Dimension(550, 300));
         frame.getContentPane().setBackground( Color.blue );
@@ -73,15 +73,10 @@ class Main {
 
         frame.getContentPane().add(b1) ;
         frame.getContentPane().add(b2) ;
-        frame.getContentPane().add(b3) ;*/
+        frame.getContentPane().add(b3) ;
 
-        frame.setVisible(true);
+        frame.setVisible(true);*/
 
-    }
-
-    public static void loop() {
-        for (var c : change) {
-            frame.remove(c);
-        }
+        System.out.println(Integer.compare(4, 1 ));
     }
 }

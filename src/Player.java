@@ -19,7 +19,7 @@ public class Player {
     public Player() {
         // create a player here
         hand = new ArrayList<>() ;
-        bankroll = 10 ;
+        bankroll = 50 ;
 
     }
 
